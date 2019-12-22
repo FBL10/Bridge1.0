@@ -105,10 +105,10 @@ def c_deck():  # Crée les instances de cartes et de joueurs
         v = cartes[i]
         cartes[i] = Carte(v)
 
-    nord = Joueur("Nord", cartes[:13], True, 1)
-    est = Joueur("Est", cartes[13:26], True, 2)
-    sud = Joueur("Sud", cartes[26:39], True, 3)
-    ouest = Joueur("Ouest", cartes[39:], True, 4)
+    nord = Joueur("Nord", cartes[:13], False, 1)
+    est = Joueur("Est", cartes[13:26], False, 2)
+    sud = Joueur("Sud", cartes[26:39],False, 3)
+    ouest = Joueur("Ouest", cartes[39:], False, 4)
     joueurs = [nord, est, sud, ouest]
 
     return joueurs
