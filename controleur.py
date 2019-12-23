@@ -11,6 +11,7 @@ contrat = ["", Joueur]  # [contrat, joueur]
 p_running = True
 tab_c = []
 ouvert = False
+roles = {"ouvreur": None, "repondant": None, "defenseur1": None, "defenseur2": None}
 tour = 0
 dem = ''
 att = ''
@@ -40,13 +41,18 @@ def enchere(joueur):
     global e_running
     global tab_e
     global ouvert
+    global roles 
 
     e_valides = ["P", "C", "K", "T", "S", "X"]
 
     e = joueur.encherir(tab_e, ouvert)
-    while e not in e_valides:
+
+    while e[1] not in e_valides and int(e[0]) in range(7):
         print("enchère invalide")
-        e = joueur.encherir(tab_e, ouvert)
+        e = joueur.encherir(tab_e)
+    if e != "0X":
+        ouvert = True
+        ouvreur = joueur.nom
     tab_e.append([joueur, e])
     if len(tab_e) > 3 and tab_e[-1][1] == tab_e[-2][1] == tab_e[-3][1] == "0X":
         e_running = False
@@ -108,9 +114,8 @@ def c_deck():  # Crée les instances de cartes et de joueurs
     nord = Joueur("Nord", cartes[:13], False, 1)
     est = Joueur("Est", cartes[13:26], False, 2)
     sud = Joueur("Sud", cartes[26:39],False, 3)
-    ouest = Joueur("Ouest", cartes[39:], False, 4)
+    ouest = Joueur("Ouest", cartes[39:],True, 4)
     joueurs = [nord, est, sud, ouest]
-
     return joueurs
 
 
@@ -169,8 +174,8 @@ def start(gen):
         j.evaluer()
 
     while e_running:
-        for j in joueurs:
-            print("\n" + j.nom + " :", j.cartes)
+        for j in joueurs: pass
+            #print("\n" + j.nom + " :", j.cartes)
         enchere(next(cj))
         if gen:
             return
@@ -186,7 +191,7 @@ def start(gen):
         tab_tour = [0, 0, 0, 0]  # [[carte, joueur],...]
         win = joueurs[0]
         for j in joueurs:
-            print("\n" + j.nom + " :", j.cartes)
+            print(j.nom + " :", j.cartes)
             coup(j, ncoups, tab_tour)
             j.rang_l = ncoups
             tab_tour[ncoups] = [j.coups[-1], j]

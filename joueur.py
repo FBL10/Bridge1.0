@@ -53,11 +53,18 @@ class Joueur:
         self.intervient = False  # main d'intervention?
         self.couleurs = ("P", "C", "K", "T", "S")  # liste des couleurs
         self.couleurs_nom = ("Pique", "Coeur", "Carreau", "Trèfle", "Sans-Atout")
+        self.ouvert = False
 
     def encherir(self, tab_e, ouvert):
         if self.humain:
+            print(self.nom + " : " + str(self.cartes))
             return input("\nenchère de " + self.nom + " : ")
         else:
+            # regarde si les enchères sont ouvertes
+            for enchere in tab_e:
+                if enchere != "0X":
+                    self.ouvert = True
+
             return self.enchere()
 
     def jouer(self, tab_c, tab_t):
@@ -178,9 +185,13 @@ class Joueur:
         else:
             self.ouverture = "0X"
 
-        #print("\n" + self.nom + " :", self.cartes, " ", self.distro, self.pts, self.ptsDistro, self.ptsTot, "pts",
-              #self.equiTxt, "Ouvre=", self.ouvre, "Maj5=", self.majeur5, "Barr=", self.barrage, "Ouvr=", self.ouverture,
-              #self.forceOuv, self.longue1, self.longue2, self.longue3, self.longue4)
+        if self.ouverture != "0X" and self.ouvert == False:
+            self.ouvreur = True
+            self.ouvert = True
+
+        print("\n" + self.nom + " :", self.cartes, " ", self.distro, self.pts, self.ptsDistro, self.ptsTot, "pts",
+              self.equiTxt, "Ouvre=", self.ouvre, "Maj5=", self.majeur5, "Barr=", self.barrage, "Ouvr=", self.ouverture,
+              self.forceOuv, self.longue1, self.longue2, self.longue3, self.longue4)
         return self.ouverture
 
     def __str__(self):
