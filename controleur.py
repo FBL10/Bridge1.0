@@ -17,7 +17,6 @@ dem = ''
 att = ''
 joueurs = []
 
-
 def f_deb(e, joueurs):  # retourne le joueur qui va faire le contrat
     # e = tableau des enchères
     global contrat
@@ -34,6 +33,19 @@ def f_deb(e, joueurs):  # retourne le joueur qui va faire le contrat
         joueurs.pop(0)
     return joueur
 
+def definir_roles(joueur):
+    global roles
+    global joueurs
+
+    for i, j in enumerate(joueurs):
+        if joueur.nom == j.nom:
+            roles["ouvreur"] = joueurs[i].nom
+            roles["defenseur1"] = joueurs[(i + 1) % len(joueurs)].nom
+            roles["repondant"] = joueurs[(i + 2) % len(joueurs)].nom
+            roles["defenseur2"] = joueurs[(i + 3) % len(joueurs)].nom
+
+    print("DEFINITION DES ROLES" , roles)
+
 
 def enchere(joueur):
 
@@ -41,18 +53,20 @@ def enchere(joueur):
     global e_running
     global tab_e
     global ouvert
-    global roles 
+    global roles
 
     e_valides = ["P", "C", "K", "T", "S", "X"]
 
-    e = joueur.encherir(tab_e, ouvert)
+    e = joueur.encherir(tab_e, ouvert, roles)
 
     while e[1] not in e_valides and int(e[0]) in range(7):
         print("enchère invalide")
-        e = joueur.encherir(tab_e)
-    if e != "0X":
+        e = joueur.encherir(tab_e, ouvert, roles)
+    if e != "0X" :
+        if ouvert == False:
+            definir_roles(joueur)
         ouvert = True
-        ouvreur = joueur.nom
+
     tab_e.append([joueur, e])
     if len(tab_e) > 3 and tab_e[-1][1] == tab_e[-2][1] == tab_e[-3][1] == "0X":
         e_running = False
