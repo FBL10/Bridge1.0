@@ -34,6 +34,27 @@ def f_deb(e, joueurs):  # retourne le joueur qui va faire le contrat
         joueurs.pop(0)
     return joueur
 
+# déterminne quelles enchères il est possible de déclarer
+def det_e_pos(tab_e, e_valides):
+    tab_e_pos = ["1T", "1K", "1C", "1P", "1S", "2T", "2K", "2C", "2P", "2S", "3T", "3K", "3C", "3P", "3S", "4T",
+                 "4K", "4C",
+                 "4P", "4S", "5T", "5K", "5C", "5P", "5S", "6T", "6K", "6C", "6P", "6S", "7T", "7K", "7C", "7P",
+                 "7S", "0X"]
+
+    if len(tab_e) != 0:
+        for i, x in enumerate(reversed(tab_e)):
+            if x[1] != "0X":
+                derniere_e = x[1]
+                break
+            if i == len(tab_e)-1:
+                return tab_e_pos
+
+        for j, y in enumerate(tab_e_pos):
+            if y == derniere_e:
+                return tab_e_pos[j+1:]
+    else:
+        return tab_e_pos
+
 
 def enchere(joueur):
 
@@ -43,7 +64,10 @@ def enchere(joueur):
     global ouvert
     global roles 
 
-    e_valides = ["P", "C", "K", "T", "S", "X"]
+    e_valides = ["T", "K", "C", "P", "S", "X"]
+
+    det_e_pos(tab_e, e_valides)
+    print(det_e_pos(tab_e, e_valides))
 
     e = joueur.encherir(tab_e, ouvert)
 
@@ -62,8 +86,6 @@ def enchere(joueur):
             print(contrat[0])
             sys.exit()
         print("\ncontrat de " + tab_e[-4][0].nom + " et " + tab_e[-2][0].nom + " : " + contrat[0])
-
-
 
 def coup(joueur, ncoups, tab_tour):
 
