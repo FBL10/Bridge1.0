@@ -34,7 +34,7 @@ def f_deb(e, joueurs):  # retourne le joueur qui va faire le contrat
     return joueur
 
 # déterminne quelles enchères il est possible de déclarer
-def det_e_pos(tab_e, e_valides):
+def det_e_pos(tab_e):
     tab_e_pos = ["1T", "1K", "1C", "1P", "1S", "2T", "2K", "2C", "2P", "2S", "3T", "3K", "3C", "3P", "3S", "4T",
                  "4K", "4C",
                  "4P", "4S", "5T", "5K", "5C", "5P", "5S", "6T", "6K", "6C", "6P", "6S", "7T", "7K", "7C", "7P",
@@ -78,7 +78,7 @@ def enchere(joueur):
 
     e_valides = ["T", "K", "C", "P", "S", "X"]
 
-    det_e_pos(tab_e, e_valides)
+    det_e_pos(tab_e)
 
     e = joueur.encherir(tab_e, ouvert, roles)
 
