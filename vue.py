@@ -41,26 +41,31 @@ bids_largeur, bids_hauteur = (WIDTH//5), (HEIGHT//3)
 bids_x, bids_y = (WIDTH//2), (HEIGHT//3)
 bids_image = pygame.transform.scale(pygame.image.load('images/enchere.png').convert_alpha(), (bids_largeur, bids_hauteur))
 bids_rects = []
-bids_dim = {"marge_cotés": 82/712, "marge_dessus": 56/712, "largeur_petit": 98/712,
+bids_dim = {"marge_cotés": 86/712, "marge_dessus": 58/712, "largeur_petit": 98/712,
               "hauteur_petit": 65/712,  "hauteur_long": 98/712, "dist_long_pass": 16/712,
-              "hauteur_pass": 96/712, "largeur_pass": 293/712}
+              "hauteur_pass": 96/712, "largeur_pass": 293/712, "dist_x_petit": 14/712}
 
-encheres_possibles = ["1T", "1K", "1K", "1P", "1S", "2T", "2K", "2K", "2P", "2S", "3T", "3K", "3K", "3P", "3S",
-                      "4T", "4K", "4K", "4P", "4S", "5T", "5K", "5K", "5P", "5S", "6T", "6K", "6K", "6P", "6S",
-                      "7T", "7K", "7K", "7P", "7S", "0X"]
+encheres_possibles = ["1T", "1K", "1C", "1P", "1S", "2T", "2K", "2C", "2P", "2S", "3T", "3K", "3C", "3P", "3S",
+                      "4T", "4K", "4C", "4P", "4S", "5T", "5K", "5C", "5P", "5S", "6T", "6K", "6C", "6P", "6S",
+                      "7T", "7K", "7C", "7P", "7S", "0X"]
 
 def make_encheres(encheres_valides):
     global bids_rects
 
-    bids_rects = []
-    for index, enchere in enumerate(encheres_valides):
-        if index == 0:
-            x = bids_x + bids_dim["marge_cotés"]*bids_largeur
-            y = bids_y + bids_dim["marge_dessus"]*bids_hauteur
+    bids_rects = [[], []]
+    for index, enchere in enumerate(encheres_possibles):
+
+        if enchere in encheres_valides:
+            col = 4 - (index % 5)
+            ligne = index // 5
+
+            x = bids_x + (bids_dim["marge_cotés"] + (col * (bids_dim["largeur_petit"] + bids_dim["dist_x_petit"]))) * bids_largeur
+            y = bids_y + (bids_dim["marge_dessus"] + (ligne * bids_dim["hauteur_petit"])) * bids_hauteur
             largeur = bids_dim["largeur_petit"]*bids_largeur
             hauteur = bids_dim["hauteur_petit"]*bids_hauteur
             rect = pygame.Rect(x, y, largeur, hauteur)
-            bids_rects.append(rect)
+            bids_rects[0].append(rect)
+            bids_rects[1].append(enchere)
 
 # bg_ : background
 menu_bg_image = pygame.transform.scale(pygame.image.load('images/menu_bg.png').convert_alpha(), (WIDTH, HEIGHT))
@@ -90,9 +95,6 @@ while run:
 
         make_encheres(encheres_possibles)
 
-        for rect in bids_rects:
-            pygame.draw.rect(win, (0, 0, 0), rect)
-
     # Event handler
     for event in pygame.event.get():
         # Clique bouton gauche
@@ -114,6 +116,11 @@ while run:
                 if back_rect.collidepoint(pos):
                     playing = False
                     menu = True
+
+                if bids_rects not in ([], [[],[]]):
+                    for index in range(len(bids_rects[0])):
+                        if bids_rects[0][index].collidepoint(pos):
+                            print(bids_rects[1][index])
 
         if event.type == pygame.QUIT:
             run = False
